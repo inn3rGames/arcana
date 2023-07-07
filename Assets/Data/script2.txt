@@ -1,0 +1,48 @@
+$location Forest of Belmont
+$age “”
+$pronoun 2
+$name Betty
+
+block block
+	showBG Forest
+	show Player
+	Player: "Quickly, let's solve this riddle and help our friend!"
+	hide Player
+	show Asra
+	Asra: "We’ll need all the help we can get."
+	hide Asra
+	call question
+
+block block2
+	Asra: "Yes"
+Player: "No"
+	call question
+
+block block3
+show Player
+	Player: “By all that’s is good in {$location}”
+Player: WRONG WRONG WRONG
+hide Player
+	call question
+
+block block4
+show Snowman
+	Snowman: "That’s right!!"
+	Snowman: "Congratulations"
+
+block block5
+show Asra
+	Asra: "We don't know either!!"
+hide Asra
+	call question
+
+block question
+	showBG Forest
+	show Snowman
+	Snowman: "{$name}, what is 17 multiplied by 2?”
+hide Snowman
+	choice block2 "It’s a trick question"
+choice block3 "44"
+	choice block3 "47"
+	choice block4 "34"
+choice block5 "I don't know"

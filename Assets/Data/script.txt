@@ -1,0 +1,60 @@
+$name My Dude
+$location Somewhere
+
+block curious
+    showBG Forest
+	show Asra
+	Asra: "{$name}~"
+	Asra: "Wait til you see what the woods had to offer today."
+	hide Asra
+    show Player
+	Player: "Wow! So much... this is more than we need."
+    hide Player
+	show Asra
+	Asra: "Well, this time I thought it'd be better to have plenty."
+	Asra: "I don't want to leave you here with nothing to eat but pumpkin bread."
+	hide Asra
+    show Player
+	Player: "I want to come with you."
+	hide Player
+    show Asra
+	Asra: "I know. I wish I could take you, it's just... it's too risky."
+	hide Asra
+	choice dontgo "Then don't go"
+	choice takeit "I'll risk it."
+
+block dontgo
+    show Player
+	Player: "Then don't go."
+    hide Player
+	show Asra
+	Asra: "Don't go?"
+	Asra: "Soon I won't have to go anywhere you can't follow."
+	Asra: "It's just... you aren't ready yet. If I could wait until then, I would."
+	Asra: "And if I didn't have to go, I wouldn't. I always miss you when I'm gone, {$name}."
+    hide Asra
+    show Player
+	Player: "So you have to go, and I have to stay... because you told me so."
+	call end
+
+block takeit
+	show Player
+	Player: "I'll risk it."
+	hide Player
+	show Asra
+	Asra: "You will? Why?"
+	Asra: "So you can trip down a lava tube into the den of the beast at the base of Blood Mountain?"
+	Asra: "Slog  through the crawling maze of Torturia, only to end up in a quicksand pit in the Bog of Resistance?"
+	hide Asra
+	show Player
+	Player: "I want to be with you. If you're going to Blood Mountain, that's where I want to be."
+	hide Player
+	show Asra
+	Asra: "Ah..."
+	call end
+
+block end
+	hide Player
+	hide Asra
+	show Snowman
+	Snowman: "Do you have any more questions for me, {$name}? I have to go {$location} soon."
