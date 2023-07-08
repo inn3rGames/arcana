@@ -385,6 +385,16 @@ PrefabInstance:
       propertyPath: m_text
       value: Footer
       objectReference: {fileID: 0}
+    - target: {fileID: 8874637681108627080, guid: c068c062dd74848e4b1fd70106146e50,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 112
+      objectReference: {fileID: 0}
+    - target: {fileID: 8874637681108627080, guid: c068c062dd74848e4b1fd70106146e50,
+        type: 3}
+      propertyPath: m_enableAutoSizing
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
