@@ -8,16 +8,14 @@ public class DialogueParser : MonoBehaviour
     public TextAsset DialogueFile;
     private Dictionary<string, string> _variables = new Dictionary<string, string>();
     private List<string[]> _blocks = new List<string[]>();
+    public List<ProcessedBlock> ProcessedBlocks = new List<ProcessedBlock>();
 
     void Start()
     {
         DialogueFile = Resources.Load<TextAsset>("Data/script");
         FindBlocksAndVariables();
-
-        for (int i = 0; i < _blocks.Count; i++)
-        {
-            ExtractCommandsFromBlock(_blocks[i]);
-        }
+        ProcessBlocks();
+        LogProcessedBlocks(ProcessedBlocks);
     }
 
     private void FindBlocksAndVariables()
@@ -76,51 +74,62 @@ public class DialogueParser : MonoBehaviour
         }
     }
 
-    private void ExtractCommandsFromBlock(string[] block)
+    private void ProcessBlocks()
     {
-        List<Command> processedBlock = new List<Command>();
+        for (int i = 0; i < _blocks.Count; i++)
+        {
+            List<Command> processedCommands = ExtractCommandsFromContent(_blocks[i]);
+            ProcessedBlocks.Add(new ProcessedBlock(i, "demo", processedCommands));
+        }
+    }
+
+    private List<Command> ExtractCommandsFromContent(string[] block)
+    {
+        List<Command> processedCommands = new List<Command>();
 
         foreach (string contentLine in block)
         {
             if (contentLine.Contains("show "))
             {
-                ExtractStandardCommand("show", "show ", contentLine, processedBlock);
+                ExtractStandardCommand("show", "show ", contentLine, processedCommands);
             }
 
             if (contentLine.Contains("hide "))
             {
-                ExtractStandardCommand("hide", "hide ", contentLine, processedBlock);
+                ExtractStandardCommand("hide", "hide ", contentLine, processedCommands);
             }
 
             if (contentLine.Contains("showBG "))
             {
-                ExtractStandardCommand("showBG", "showBG ", contentLine, processedBlock);
+                ExtractStandardCommand("showBG", "showBG ", contentLine, processedCommands);
             }
 
             if (contentLine.Contains("call "))
             {
-                ExtractStandardCommand("call", "call ", contentLine, processedBlock);
+                ExtractStandardCommand("call", "call ", contentLine, processedCommands);
             }
 
             if (contentLine.Contains("choice "))
             {
-                ExtractChoiceCommand("choice", "choice ", contentLine, processedBlock);
+                ExtractChoiceCommand("choice", "choice ", contentLine, processedCommands);
             }
 
             if (contentLine.Contains(": "))
             {
-                ExtractDialogueCommand("dialogue", ": ", contentLine, processedBlock);
+                ExtractDialogueCommand("dialogue", ": ", contentLine, processedCommands);
             }
         }
 
-        LogList(processedBlock);
+        LogProcessedCommands(processedCommands);
+
+        return processedCommands;
     }
 
     private void ExtractStandardCommand(
         string commandType,
         string commandSpacing,
         string contentLine,
-        List<Command> processedBlock
+        List<Command> processedCommands
     )
     {
         string removeCommand = contentLine.Remove(
@@ -130,14 +139,14 @@ public class DialogueParser : MonoBehaviour
         string extractContent = removeCommand.Trim();
 
         Command processedCommand = new Command(commandType, extractContent);
-        processedBlock.Add(processedCommand);
+        processedCommands.Add(processedCommand);
     }
 
     private void ExtractDialogueCommand(
         string commandType,
         string commandSpacing,
         string contentLine,
-        List<Command> processedBlock
+        List<Command> processedCommands
     )
     {
         string character = contentLine.Substring(0, contentLine.IndexOf(commandSpacing)).Trim();
@@ -148,14 +157,14 @@ public class DialogueParser : MonoBehaviour
         string extractContent = removeCommand.Trim();
 
         Command processedCommand = new Command(commandType, extractContent, character);
-        processedBlock.Add(processedCommand);
+        processedCommands.Add(processedCommand);
     }
 
     private void ExtractChoiceCommand(
         string commandType,
         string commandSpacing,
         string contentLine,
-        List<Command> processedBlock
+        List<Command> processedCommands
     )
     {
         string removeCommand = contentLine.Remove(
@@ -168,7 +177,7 @@ public class DialogueParser : MonoBehaviour
             .Trim();
 
         Command processedCommand = new Command(commandType, extractContent, "none", choiceBlock);
-        processedBlock.Add(processedCommand);
+        processedCommands.Add(processedCommand);
     }
 
     // Log dictionaries
@@ -191,16 +200,26 @@ public class DialogueParser : MonoBehaviour
         Debug.Log("END");
     }
 
-    // Log lists
-    private void LogList(List<Command> processedBlock)
+    // Log processed commands
+    private void LogProcessedCommands(List<Command> processedCommands)
     {
-        Debug.Log("START");
+        for (var i = 0; i < processedCommands.Count; i++)
+        {
+            Debug.Log(
+                $"COMMAND START {processedCommands[i].Type} {processedCommands[i].Character} {processedCommands[i].Content} {processedCommands[i].ChoiceBlock} COMMAND END"
+            );
+        }
+    }
+
+    // Log processed blocks
+    private void LogProcessedBlocks(List<ProcessedBlock> processedBlock)
+    {
         for (var i = 0; i < processedBlock.Count; i++)
         {
             Debug.Log(
-                $"{processedBlock[i].Type} {processedBlock[i].Character} {processedBlock[i].Content} {processedBlock[i].ChoiceBlock}"
+                $"BLOCK START {processedBlock[i].Index} {processedBlock[i].Name} {processedBlock[i].Commands.Count} BLOCK END"
             );
+            LogProcessedCommands(processedBlock[i].Commands);
         }
-        Debug.Log("END");
     }
 }
