@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -5,12 +7,17 @@ public class DialogueParser : MonoBehaviour
 {
     public TextAsset DialogueFile;
     private Dictionary<string, string> _variables = new Dictionary<string, string>();
-    private List<Queue<string>> _blocks = new List<Queue<string>>();
+    private List<string[]> _blocks = new List<string[]>();
 
     void Start()
     {
         DialogueFile = Resources.Load<TextAsset>("Data/script");
         FindBlocksAndVariables();
+
+        for (int i = 0; i < _blocks.Count; i++)
+        {
+            ExtractCommandsFromBlock(_blocks[i]);
+        }
     }
 
     private void FindBlocksAndVariables()
@@ -41,7 +48,9 @@ public class DialogueParser : MonoBehaviour
                 if (contentLine.StartsWith("block") || i == contentLines.Length - 1)
                 {
                     foundBlock = false;
-                    _blocks.Add(currentBlockContent);
+
+                    // Use an array to deep copy our content
+                    _blocks.Add(currentBlockContent.ToArray());
                     currentBlockContent.Clear();
                 }
 
@@ -69,6 +78,19 @@ public class DialogueParser : MonoBehaviour
         }
     }
 
+    private void ExtractCommandsFromBlock(string[] block)
+    {
+        foreach (string contentLine in block)
+        {
+            if (contentLine.Contains("show "))
+            {
+                string substractCommand = contentLine.Remove(contentLine.IndexOf("show "), "show ".Length);
+                string trimString = substractCommand.Trim();
+                Debug.Log(trimString);
+            }
+        }
+    }
+
     // Log dictionaries
     private void LogDictionaries(Dictionary<string, string> dictionary)
     {
@@ -78,14 +100,13 @@ public class DialogueParser : MonoBehaviour
         }
     }
 
-    // Log queues
-    private void LogQueues(Queue<string> queue)
+    // Log arrays
+    private void LogArray(string[] array)
     {
         Debug.Log("START");
-        string[] arrayFromQueue = queue.ToArray();
-        for (int i = 0; i < arrayFromQueue.Length; i++)
+        for (int i = 0; i < array.Length; i++)
         {
-            Debug.Log(arrayFromQueue[i].ToString());
+            Debug.Log(array[i].ToString());
         }
         Debug.Log("END");
     }
