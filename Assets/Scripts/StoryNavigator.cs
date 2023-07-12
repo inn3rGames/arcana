@@ -1,14 +1,14 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class SceneNavigator : MonoBehaviour
+public class StoryNavigator : MonoBehaviour
 {
-    public void StartGame()
+    public void StartStory()
     {
         SceneManager.LoadScene(1);
     }
 
-    public void EndGame()
+    public void EndStory()
     {
         SceneManager.LoadScene(0);
     }
