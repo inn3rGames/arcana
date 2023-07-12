@@ -10,10 +10,10 @@ public class DialogueParser : MonoBehaviour
     void Start()
     {
         DialogueFile = Resources.Load<TextAsset>("Data/script");
-        GenerateCommands();
+        FindBlocksAndVariables();
     }
 
-    private void GenerateCommands()
+    private void FindBlocksAndVariables()
     {
         // Load text file
         string content = DialogueFile.text;
