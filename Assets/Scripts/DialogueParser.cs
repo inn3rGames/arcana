@@ -104,7 +104,7 @@ public class DialogueParser : MonoBehaviour
 
             if (contentLine.Contains("choice "))
             {
-                ExtractStandardCommand("choice", "choice ", contentLine, processedBlock);
+                ExtractChoiceCommand("choice", "choice ", contentLine, processedBlock);
             }
 
             if (contentLine.Contains(": "))
@@ -151,6 +151,26 @@ public class DialogueParser : MonoBehaviour
         processedBlock.Add(processedCommand);
     }
 
+    private void ExtractChoiceCommand(
+        string commandType,
+        string commandSpacing,
+        string contentLine,
+        List<Command> processedBlock
+    )
+    {
+        string removeCommand = contentLine.Remove(
+            contentLine.IndexOf(commandSpacing),
+            commandSpacing.Length
+        );
+        string choiceBlock = removeCommand.Substring(0, removeCommand.IndexOf(" ")).Trim();
+        string extractContent = removeCommand
+            .Remove(removeCommand.IndexOf(choiceBlock + " "), (choiceBlock + " ").Length)
+            .Trim();
+
+        Command processedCommand = new Command(commandType, extractContent, "none", choiceBlock);
+        processedBlock.Add(processedCommand);
+    }
+
     // Log dictionaries
     private void LogDictionaries(Dictionary<string, string> dictionary)
     {
@@ -178,7 +198,7 @@ public class DialogueParser : MonoBehaviour
         for (var i = 0; i < processedBlock.Count; i++)
         {
             Debug.Log(
-                $"{processedBlock[i].Type} {processedBlock[i].Character} {processedBlock[i].Content}"
+                $"{processedBlock[i].Type} {processedBlock[i].Character} {processedBlock[i].Content} {processedBlock[i].ChoiceBlock}"
             );
         }
         Debug.Log("END");
