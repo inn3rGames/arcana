@@ -84,79 +84,71 @@ public class DialogueParser : MonoBehaviour
         {
             if (contentLine.Contains("show "))
             {
-                string removeCommand = contentLine.Remove(
-                    contentLine.IndexOf("show "),
-                    "show ".Length
-                );
-                string extractContent = removeCommand.Trim();
-
-                Command processedCommand = new Command("show", extractContent);
-                processedBlock.Add(processedCommand);
+                ExtractStandardCommand("show", "show ", contentLine, processedBlock);
             }
 
             if (contentLine.Contains("hide "))
             {
-                string removeCommand = contentLine.Remove(
-                    contentLine.IndexOf("hide "),
-                    "hide ".Length
-                );
-                string extractContent = removeCommand.Trim();
-
-                Command processedCommand = new Command("hide", extractContent);
-                processedBlock.Add(processedCommand);
+                ExtractStandardCommand("hide", "hide ", contentLine, processedBlock);
             }
 
             if (contentLine.Contains("showBG "))
             {
-                string removeCommand = contentLine.Remove(
-                    contentLine.IndexOf("showBG "),
-                    "showBG ".Length
-                );
-                string extractContent = removeCommand.Trim();
-
-                Command processedCommand = new Command("showBG", extractContent);
-                processedBlock.Add(processedCommand);
+                ExtractStandardCommand("showBG", "showBG ", contentLine, processedBlock);
             }
 
             if (contentLine.Contains("call "))
             {
-                string removeCommand = contentLine.Remove(
-                    contentLine.IndexOf("call "),
-                    "call ".Length
-                );
-                string extractContent = removeCommand.Trim();
-
-                Command processedCommand = new Command("call", extractContent);
-                processedBlock.Add(processedCommand);
+                ExtractStandardCommand("call", "call ", contentLine, processedBlock);
             }
 
             if (contentLine.Contains("choice "))
             {
-                string removeCommand = contentLine.Remove(
-                    contentLine.IndexOf("choice "),
-                    "choice ".Length
-                );
-                string extractContent = removeCommand.Trim();
-
-                Command processedCommand = new Command("choice", extractContent);
-                processedBlock.Add(processedCommand);
+                ExtractStandardCommand("choice", "choice ", contentLine, processedBlock);
             }
 
             if (contentLine.Contains(": "))
             {
-                string character = contentLine.Substring(0, contentLine.IndexOf(": ")).Trim();
-                string removeCommand = contentLine.Remove(
-                    contentLine.IndexOf(character + ": "),
-                    (character + ": ").Length
-                );
-                string extractContent = removeCommand.Trim();
-
-                Command processedCommand = new Command("dialogue", extractContent, character);
-                processedBlock.Add(processedCommand);
+                ExtractDialogueCommand("dialogue", ": ", contentLine, processedBlock);
             }
         }
 
         LogList(processedBlock);
+    }
+
+    private void ExtractStandardCommand(
+        string commandType,
+        string commandSpacing,
+        string contentLine,
+        List<Command> processedBlock
+    )
+    {
+        string removeCommand = contentLine.Remove(
+            contentLine.IndexOf(commandSpacing),
+            commandSpacing.Length
+        );
+        string extractContent = removeCommand.Trim();
+
+        Command processedCommand = new Command(commandType, extractContent);
+        processedBlock.Add(processedCommand);
+    }
+
+    private void ExtractDialogueCommand(
+        string commandType,
+        string commandSpacing,
+        string contentLine,
+        List<Command> processedBlock
+    )
+    {
+        string character = contentLine.Substring(0, contentLine.IndexOf(commandSpacing)).Trim();
+        string removeCommand = contentLine.Remove(
+            contentLine.IndexOf(character + commandSpacing),
+            (character + commandSpacing).Length
+        );
+        string extractContent = removeCommand.Trim();
+
+        Command processedCommand = new Command(commandType, extractContent, character);
+        processedBlock.Add(processedCommand);
     }
 
     // Log dictionaries
