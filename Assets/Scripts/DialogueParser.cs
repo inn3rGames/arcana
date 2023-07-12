@@ -34,29 +34,30 @@ public class MagicParser : MonoBehaviour
                 _variables.Add(key, value);
             }
 
-            // Find blocks
+            // Process the founded block
             if (foundBlock == true)
             {
+                // Look for a new block if the founded block no longer has commands
                 if (contentLine.StartsWith("block") || i == contentLines.Length - 1)
                 {
                     foundBlock = false;
-
                     _blocks.Add(currentBlockContent);
-                    LogQueues(currentBlockContent);
                     currentBlockContent.Clear();
                 }
+
+                // Add commands to the founded block
                 else
                 {
-                    // Queue commands
                     currentBlockContent.Enqueue(contentLine);
                 }
             }
 
+            // Find a block
             if (contentLine.StartsWith("block"))
             {
                 foundBlock = true;
 
-                // Add block line from text
+                // Add block index from text line
                 string id = (i + 1).ToString();
                 currentBlockContent.Enqueue(id);
 
