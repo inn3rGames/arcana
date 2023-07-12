@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MagicParser : MonoBehaviour
+public class DialogueParser : MonoBehaviour
 {
     public TextAsset DialogueFile;
     private Dictionary<string, string> _variables = new Dictionary<string, string>();
