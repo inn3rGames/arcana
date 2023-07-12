@@ -53,7 +53,6 @@ public class DialogueParser : MonoBehaviour
                     _blocks.Add(currentBlockContent.ToArray());
                     currentBlockContent.Clear();
                 }
-
                 // Add commands to the founded block
                 else
                 {
@@ -74,21 +73,90 @@ public class DialogueParser : MonoBehaviour
                 string title = contentLine;
                 currentBlockContent.Enqueue(title);
             }
-
         }
     }
 
     private void ExtractCommandsFromBlock(string[] block)
     {
+        List<Command> processedBlock = new List<Command>();
+
         foreach (string contentLine in block)
         {
             if (contentLine.Contains("show "))
             {
-                string substractCommand = contentLine.Remove(contentLine.IndexOf("show "), "show ".Length);
-                string trimString = substractCommand.Trim();
-                Debug.Log(trimString);
+                string removeCommand = contentLine.Remove(
+                    contentLine.IndexOf("show "),
+                    "show ".Length
+                );
+                string extractContent = removeCommand.Trim();
+
+                Command processedCommand = new Command("show", extractContent);
+                processedBlock.Add(processedCommand);
+            }
+
+            if (contentLine.Contains("hide "))
+            {
+                string removeCommand = contentLine.Remove(
+                    contentLine.IndexOf("hide "),
+                    "hide ".Length
+                );
+                string extractContent = removeCommand.Trim();
+
+                Command processedCommand = new Command("hide", extractContent);
+                processedBlock.Add(processedCommand);
+            }
+
+            if (contentLine.Contains("showBG "))
+            {
+                string removeCommand = contentLine.Remove(
+                    contentLine.IndexOf("showBG "),
+                    "showBG ".Length
+                );
+                string extractContent = removeCommand.Trim();
+
+                Command processedCommand = new Command("showBG", extractContent);
+                processedBlock.Add(processedCommand);
+            }
+
+            if (contentLine.Contains("call "))
+            {
+                string removeCommand = contentLine.Remove(
+                    contentLine.IndexOf("call "),
+                    "call ".Length
+                );
+                string extractContent = removeCommand.Trim();
+
+                Command processedCommand = new Command("call", extractContent);
+                processedBlock.Add(processedCommand);
+            }
+
+            if (contentLine.Contains("choice "))
+            {
+                string removeCommand = contentLine.Remove(
+                    contentLine.IndexOf("choice "),
+                    "choice ".Length
+                );
+                string extractContent = removeCommand.Trim();
+
+                Command processedCommand = new Command("choice", extractContent);
+                processedBlock.Add(processedCommand);
+            }
+
+            if (contentLine.Contains(": "))
+            {
+                string character = contentLine.Substring(0, contentLine.IndexOf(": ")).Trim();
+                string removeCommand = contentLine.Remove(
+                    contentLine.IndexOf(character + ": "),
+                    (character + ": ").Length
+                );
+                string extractContent = removeCommand.Trim();
+
+                Command processedCommand = new Command("dialogue", extractContent, character);
+                processedBlock.Add(processedCommand);
             }
         }
+
+        LogList(processedBlock);
     }
 
     // Log dictionaries
@@ -107,6 +175,19 @@ public class DialogueParser : MonoBehaviour
         for (int i = 0; i < array.Length; i++)
         {
             Debug.Log(array[i].ToString());
+        }
+        Debug.Log("END");
+    }
+
+    // Log lists
+    private void LogList(List<Command> processedBlock)
+    {
+        Debug.Log("START");
+        for (var i = 0; i < processedBlock.Count; i++)
+        {
+            Debug.Log(
+                $"{processedBlock[i].Type} {processedBlock[i].Character} {processedBlock[i].Content}"
+            );
         }
         Debug.Log("END");
     }
