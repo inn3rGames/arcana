@@ -5,16 +5,17 @@ public class MagicParser : MonoBehaviour
 {
     public TextAsset DialogueFile;
     private Dictionary<string, string> _variables = new Dictionary<string, string>();
-    private Dictionary<string, Queue<string>> _blocks = new Dictionary<string, Queue<string>>();
+    private List<Queue<string>> _blocks = new List<Queue<string>>();
 
     void Start()
     {
-        DialogueFile = Resources.Load<TextAsset>("Data/script2");
+        DialogueFile = Resources.Load<TextAsset>("Data/script");
         GenerateCommands();
     }
 
     private void GenerateCommands()
     {
+        // Load text file
         string content = DialogueFile.text;
         string[] contentLines = content.Split(System.Environment.NewLine.ToCharArray());
 
@@ -25,6 +26,7 @@ public class MagicParser : MonoBehaviour
         {
             string contentLine = contentLines[i];
 
+            // Find variables
             if (contentLine.StartsWith("$"))
             {
                 string key = contentLine.Substring(1, contentLine.IndexOf(" "));
@@ -32,13 +34,20 @@ public class MagicParser : MonoBehaviour
                 _variables.Add(key, value);
             }
 
+            // Find blocks
             if (foundBlock == true)
             {
-                if (contentLine.StartsWith("block"))
+                if (contentLine.StartsWith("block") || i == contentLines.Length - 1)
                 {
                     foundBlock = false;
+
+                    _blocks.Add(currentBlockContent);
+                    LogQueues(currentBlockContent);
                     currentBlockContent.Clear();
-                }else{
+                }
+                else
+                {
+                    // Queue commands
                     currentBlockContent.Enqueue(contentLine);
                 }
             }
@@ -47,22 +56,36 @@ public class MagicParser : MonoBehaviour
             {
                 foundBlock = true;
 
-                string value = contentLine.Replace("block ", "");
-                currentBlockContent.Enqueue(value);
+                // Add block line from text
+                string id = (i + 1).ToString();
+                currentBlockContent.Enqueue(id);
 
-                _blocks.Add("block" + (i + 1).ToString(), currentBlockContent);
+                // Add block title
+                string title = contentLine;
+                currentBlockContent.Enqueue(title);
             }
 
         }
-
-        LogDictionaries(_variables);
     }
 
+    // Log dictionaries
     private void LogDictionaries(Dictionary<string, string> dictionary)
     {
         foreach (var pair in dictionary)
         {
             Debug.Log($"{pair.Key} {pair.Value}");
         }
+    }
+
+    // Log queues
+    private void LogQueues(Queue<string> queue)
+    {
+        Debug.Log("START");
+        string[] arrayFromQueue = queue.ToArray();
+        for (int i = 0; i < arrayFromQueue.Length; i++)
+        {
+            Debug.Log(arrayFromQueue[i].ToString());
+        }
+        Debug.Log("END");
     }
 }
