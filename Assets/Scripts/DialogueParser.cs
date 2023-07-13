@@ -11,6 +11,10 @@ public class DialogueParser : MonoBehaviour
 
     void Awake()
     {
+        //Reset static properties when reloading scene
+        ProcessedBlocks = new List<ProcessedBlock>();
+
+        // Load and process script
         _dialogueFile = Resources.Load<TextAsset>("Data/script");
         FindBlocksAndVariables();
         ProcessBlocks();
