@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     private TMP_Text _dialogueText;
     private TMP_Text _characterNameText;
     private GameObject _choiceGroup;
+    private GameObject _choiceArea;
 
     private Dictionary<string, Sprite> _spriteDictionary = new Dictionary<string, Sprite>();
     private Sprite _forest;
@@ -30,6 +31,15 @@ public class GameManager : MonoBehaviour
             .FindGameObjectWithTag("BackgroundImage")
             .GetComponent<Image>();
         _characterImage = GameObject.FindGameObjectWithTag("CharacterImage").GetComponent<Image>();
+        _dialogueText = GameObject
+            .FindGameObjectWithTag("DialogueText")
+            .GetComponent<TextMeshProUGUI>();
+        _characterNameText = GameObject
+            .FindGameObjectWithTag("CharacterNameText")
+            .GetComponent<TextMeshProUGUI>();
+
+        _choiceGroup = GameObject.FindGameObjectWithTag("ChoiceGroup");
+        _choiceArea = GameObject.FindGameObjectWithTag("ChoiceArea");
 
         // Load sprites
         _forest = Resources.Load<Sprite>("Art/Forest");
@@ -47,16 +57,6 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        _dialogueText = GameObject
-            .FindGameObjectWithTag("DialogueText")
-            .GetComponent<TextMeshProUGUI>();
-
-        _characterNameText = GameObject
-            .FindGameObjectWithTag("CharacterNameText")
-            .GetComponent<TextMeshProUGUI>();
-
-        _choiceGroup = GameObject.FindGameObjectWithTag("ChoiceGroup");
-
         // Hide character image
         _characterImage.color = new Color32(0, 0, 0, 0);
         _characterImage.enabled = false;

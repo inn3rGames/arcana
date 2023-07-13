@@ -9,6 +9,7 @@ TagManager:
   - BackgroundImage
   - CharacterNameText
   - ChoiceGroup
+  - ChoiceArea
   layers:
   - Default
   - TransparentFX
