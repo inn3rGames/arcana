@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
 
     private Dictionary<string, string> _variables;
     private List<ProcessedBlock> _processedBlocks;
+    private Dictionary<string, ProcessedBlock> _blockLinks;
 
     void Awake()
     {
@@ -65,6 +66,7 @@ public class GameManager : MonoBehaviour
 
         _variables = DialogueParser.Variables;
         _processedBlocks = DialogueParser.ProcessedBlocks;
+        _blockLinks = DialogueParser.BlockLinks;
 
         // Initialize scene
         LogText();
@@ -129,7 +131,16 @@ public class GameManager : MonoBehaviour
             _backgroundImage.sprite = _spriteDictionary[curentCommand.Content];
         }
 
-        if (curentCommand.Type.Equals("call")) { }
+        if (curentCommand.Type.Equals("call"))
+        {
+            string blockKey = curentCommand.Content;
+            ProcessedBlock destinationBlock = _blockLinks[blockKey];
+
+            _blockIndex = destinationBlock.Index;
+            _commandIndex = 0;
+
+            ExecuteCommands();
+        }
 
         if (curentCommand.Type.Equals("choice")) { }
 

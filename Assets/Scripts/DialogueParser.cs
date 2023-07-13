@@ -8,17 +8,22 @@ public class DialogueParser : MonoBehaviour
     private List<string[]> _rawBlocks = new List<string[]>();
     public static Dictionary<string, string> Variables = new Dictionary<string, string>();
     public static List<ProcessedBlock> ProcessedBlocks = new List<ProcessedBlock>();
+    public static Dictionary<string, ProcessedBlock> BlockLinks =
+        new Dictionary<string, ProcessedBlock>();
 
     void Awake()
     {
         //Reset static properties when reloading scene
         Variables = new Dictionary<string, string>();
         ProcessedBlocks = new List<ProcessedBlock>();
+        BlockLinks = new Dictionary<string, ProcessedBlock>();
 
         // Load and process script
         _dialogueFile = Resources.Load<TextAsset>("Data/script");
         FindBlocksAndVariables();
         ProcessBlocks();
+        GenerateBlockLinks();
+        //LogBlockLinks(BlockLinks);
         //LogProcessedBlocks(ProcessedBlocks);
     }
 
@@ -91,6 +96,14 @@ public class DialogueParser : MonoBehaviour
                     processedCommands
                 )
             );
+        }
+    }
+
+    private void GenerateBlockLinks()
+    {
+        for (int i = 0; i < ProcessedBlocks.Count; i++)
+        {
+            BlockLinks.Add(ProcessedBlocks[i].Name, ProcessedBlocks[i]);
         }
     }
 
@@ -195,6 +208,16 @@ public class DialogueParser : MonoBehaviour
         foreach (var pair in dictionary)
         {
             Debug.Log($"{pair.Key}{pair.Value}");
+        }
+    }
+
+    // Log block links
+    private void LogBlockLinks(Dictionary<string, ProcessedBlock> blockLink)
+    {
+        foreach (var pair in blockLink)
+        {
+            Debug.Log($"{pair.Key}");
+            LogProcessedCommands(pair.Value.Commands);
         }
     }
 
