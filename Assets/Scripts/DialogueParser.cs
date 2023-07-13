@@ -4,23 +4,23 @@ using UnityEngine;
 
 public class DialogueParser : MonoBehaviour
 {
-    public TextAsset DialogueFile;
+    private TextAsset _dialogueFile;
     private Dictionary<string, string> _variables = new Dictionary<string, string>();
     private List<string[]> _rawBlocks = new List<string[]>();
     public static List<ProcessedBlock> ProcessedBlocks = new List<ProcessedBlock>();
 
     void Awake()
     {
-        DialogueFile = Resources.Load<TextAsset>("Data/script");
+        _dialogueFile = Resources.Load<TextAsset>("Data/script");
         FindBlocksAndVariables();
         ProcessBlocks();
-        LogProcessedBlocks(ProcessedBlocks);
+        //LogProcessedBlocks(ProcessedBlocks);
     }
 
     private void FindBlocksAndVariables()
     {
         // Load text file
-        string content = DialogueFile.text;
+        string content = _dialogueFile.text;
         string[] contentLines = content.Split(System.Environment.NewLine.ToCharArray());
 
         bool foundBlock = false;
