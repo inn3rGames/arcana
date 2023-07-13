@@ -11,7 +11,6 @@ public class GameManager : MonoBehaviour
     private int _commandIndex;
     private List<ProcessedBlock> _processedBlocks;
 
-    // Start is called before the first frame update
     void Start()
     {
         dialogueText = GetComponent<TextMeshProUGUI>();
@@ -52,5 +51,22 @@ public class GameManager : MonoBehaviour
         string currentContent = _processedBlocks[_blockIndex].Commands[_commandIndex].Content;
         dialogueText.text =
             currentContent + " " + _blockIndex.ToString() + " " + _commandIndex.ToString();
+    }
+
+    void ExecuteCommands()
+    {
+        Command curentCommand = _processedBlocks[_blockIndex].Commands[_commandIndex];
+
+        if (curentCommand.Type.Equals("show")) { }
+
+        if (curentCommand.Type.Equals("hide")) { }
+
+        if (curentCommand.Type.Equals("showBG")) { }
+
+        if (curentCommand.Type.Equals("call")) { }
+
+        if (curentCommand.Type.Equals("choice")) { }
+
+        if (curentCommand.Type.Equals("dialogue")) { }
     }
 }
