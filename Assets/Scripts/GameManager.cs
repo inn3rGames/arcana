@@ -63,14 +63,14 @@ public class GameManager : MonoBehaviour
         _processedBlocks = DialogueParser.ProcessedBlocks;
 
         // Initialize scene
-        //SetText();
+        LogText();
         ExecuteCommands();
     }
 
     public void Click()
     {
         Next();
-        //SetText();
+        LogText();
         ExecuteCommands();
     }
 
@@ -93,11 +93,10 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void SetText()
+    void LogText()
     {
         string currentContent = _processedBlocks[_blockIndex].Commands[_commandIndex].Content;
-        _dialogueText.text =
-            currentContent + " " + _blockIndex.ToString() + " " + _commandIndex.ToString();
+        Debug.Log(currentContent + "" + _blockIndex.ToString() + "" + _commandIndex.ToString());
     }
 
     void ExecuteCommands()
