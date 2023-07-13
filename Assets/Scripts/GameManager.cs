@@ -16,9 +16,13 @@ public class GameManager : MonoBehaviour
     private Sprite _asra;
     private Sprite _snowman;
 
-    private TMP_Text dialogueText;
+    private TMP_Text _dialogueText;
+    private TMP_Text _characterNameText;
+
     private int _blockIndex;
     private int _commandIndex;
+
+    private Dictionary<string, string> _variables;
     private List<ProcessedBlock> _processedBlocks;
 
     void Awake()
@@ -44,25 +48,30 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        dialogueText = GameObject
+        _dialogueText = GameObject
             .FindGameObjectWithTag("DialogueText")
+            .GetComponent<TextMeshProUGUI>();
+
+        _characterNameText = GameObject
+            .FindGameObjectWithTag("CharacterNameText")
             .GetComponent<TextMeshProUGUI>();
 
         _blockIndex = 0;
         _commandIndex = 0;
 
+        _variables = DialogueParser.Variables;
         _processedBlocks = DialogueParser.ProcessedBlocks;
 
         // Initialize scene
+        //SetText();
         ExecuteCommands();
-        SetText();
     }
 
     public void Click()
     {
         Next();
+        //SetText();
         ExecuteCommands();
-        SetText();
     }
 
     void Next()
@@ -87,13 +96,16 @@ public class GameManager : MonoBehaviour
     void SetText()
     {
         string currentContent = _processedBlocks[_blockIndex].Commands[_commandIndex].Content;
-        dialogueText.text =
+        _dialogueText.text =
             currentContent + " " + _blockIndex.ToString() + " " + _commandIndex.ToString();
     }
 
     void ExecuteCommands()
     {
         Command curentCommand = _processedBlocks[_blockIndex].Commands[_commandIndex];
+
+        _dialogueText.text = "";
+        _characterNameText.text = "";
 
         if (curentCommand.Type.Equals("show"))
         {
@@ -116,6 +128,27 @@ public class GameManager : MonoBehaviour
 
         if (curentCommand.Type.Equals("choice")) { }
 
-        if (curentCommand.Type.Equals("dialogue")) { }
+        if (curentCommand.Type.Equals("dialogue"))
+        {
+            _dialogueText.text = ReplaceVariable(curentCommand.Content);
+            _characterNameText.text = curentCommand.Character;
+        }
+    }
+
+    private string ReplaceVariable(string contentLine)
+    {
+        if (contentLine.Contains("$"))
+        {
+            string phaseOne = contentLine.Remove(0, contentLine.IndexOf("$") + 1);
+            string key = phaseOne.Substring(0, phaseOne.IndexOf("}"));
+
+            string newContent = contentLine.Replace("{$" + key + "}", _variables[key]);
+
+            return ReplaceVariable(newContent);
+        }
+        else
+        {
+            return contentLine;
+        }
     }
 }

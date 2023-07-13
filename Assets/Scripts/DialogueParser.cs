@@ -5,13 +5,14 @@ using UnityEngine;
 public class DialogueParser : MonoBehaviour
 {
     private TextAsset _dialogueFile;
-    private Dictionary<string, string> _variables = new Dictionary<string, string>();
     private List<string[]> _rawBlocks = new List<string[]>();
+    public static Dictionary<string, string> Variables = new Dictionary<string, string>();
     public static List<ProcessedBlock> ProcessedBlocks = new List<ProcessedBlock>();
 
     void Awake()
     {
         //Reset static properties when reloading scene
+        Variables = new Dictionary<string, string>();
         ProcessedBlocks = new List<ProcessedBlock>();
 
         // Load and process script
@@ -37,9 +38,9 @@ public class DialogueParser : MonoBehaviour
             // Find variables
             if (contentLine.StartsWith("$"))
             {
-                string key = contentLine.Substring(1, contentLine.IndexOf(" "));
-                string value = contentLine.Replace("$" + key, "");
-                _variables.Add(key, value);
+                string key = contentLine.Substring(1, contentLine.IndexOf(" ")).Trim();
+                string value = contentLine.Replace("$" + key, "").Trim();
+                Variables.Add(key, value);
             }
 
             // Process the founded raw block
@@ -193,7 +194,7 @@ public class DialogueParser : MonoBehaviour
     {
         foreach (var pair in dictionary)
         {
-            Debug.Log($"{pair.Key} {pair.Value}");
+            Debug.Log($"{pair.Key}{pair.Value}");
         }
     }
 
