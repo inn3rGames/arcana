@@ -8,20 +8,18 @@ public class GameManager : MonoBehaviour
 {
     private Image _backgroundImage;
     private Image _characterImage;
+    private TMP_Text _dialogueText;
+    private TMP_Text _characterNameText;
+    private GameObject _choiceGroup;
 
     private Dictionary<string, Sprite> _spriteDictionary = new Dictionary<string, Sprite>();
-
     private Sprite _forest;
     private Sprite _player;
     private Sprite _asra;
     private Sprite _snowman;
 
-    private TMP_Text _dialogueText;
-    private TMP_Text _characterNameText;
-
     private int _blockIndex;
     private int _commandIndex;
-
     private Dictionary<string, string> _variables;
     private List<ProcessedBlock> _processedBlocks;
     private Dictionary<string, ProcessedBlock> _blockLinks;
@@ -56,6 +54,8 @@ public class GameManager : MonoBehaviour
         _characterNameText = GameObject
             .FindGameObjectWithTag("CharacterNameText")
             .GetComponent<TextMeshProUGUI>();
+
+        _choiceGroup = GameObject.FindGameObjectWithTag("ChoiceGroup");
 
         // Hide character image
         _characterImage.color = new Color32(0, 0, 0, 0);
@@ -111,6 +111,7 @@ public class GameManager : MonoBehaviour
 
         _dialogueText.text = "";
         _characterNameText.text = "";
+        _choiceGroup.SetActive(false);
 
         if (curentCommand.Type.Equals("show"))
         {
@@ -142,7 +143,10 @@ public class GameManager : MonoBehaviour
             ExecuteCommands();
         }
 
-        if (curentCommand.Type.Equals("choice")) { }
+        if (curentCommand.Type.Equals("choice"))
+        {
+            _choiceGroup.SetActive(true);
+        }
 
         if (curentCommand.Type.Equals("dialogue"))
         {

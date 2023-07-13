@@ -8,6 +8,7 @@ TagManager:
   - CharacterImage
   - BackgroundImage
   - CharacterNameText
+  - ChoiceGroup
   layers:
   - Default
   - TransparentFX
