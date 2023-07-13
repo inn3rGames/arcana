@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     private TMP_Text _characterNameText;
     private GameObject _choiceGroup;
     private GameObject _choiceArea;
+    public GameObject ChoiceButtonPrefab;
 
     private Dictionary<string, Sprite> _spriteDictionary = new Dictionary<string, Sprite>();
     private Sprite _forest;
@@ -67,6 +68,8 @@ public class GameManager : MonoBehaviour
         _variables = DialogueParser.Variables;
         _processedBlocks = DialogueParser.ProcessedBlocks;
         _blockLinks = DialogueParser.BlockLinks;
+
+        Instantiate(ChoiceButtonPrefab, _choiceArea.transform);
 
         // Initialize scene
         LogText();
