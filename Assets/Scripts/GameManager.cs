@@ -13,7 +13,9 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        dialogueText = GetComponent<TextMeshProUGUI>();
+        dialogueText = GameObject
+            .FindGameObjectWithTag("DialogueText")
+            .GetComponent<TextMeshProUGUI>();
 
         _blockIndex = 0;
         _commandIndex = 0;
@@ -42,6 +44,8 @@ public class GameManager : MonoBehaviour
             {
                 _blockIndex = 0;
                 _commandIndex = 0;
+
+                StoryNavigator.EndStory();
             }
         }
     }

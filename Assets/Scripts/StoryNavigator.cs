@@ -3,12 +3,12 @@ using UnityEngine.SceneManagement;
 
 public class StoryNavigator : MonoBehaviour
 {
-    public void StartStory()
+    public static void StartStory()
     {
         SceneManager.LoadScene(1);
     }
 
-    public void EndStory()
+    public static void EndStory()
     {
         SceneManager.LoadScene(0);
     }
