@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,7 +9,7 @@ public class DialogueParser : MonoBehaviour
     private List<string[]> _rawBlocks = new List<string[]>();
     public List<ProcessedBlock> ProcessedBlocks = new List<ProcessedBlock>();
 
-    void Start()
+    void Awake()
     {
         DialogueFile = Resources.Load<TextAsset>("Data/script");
         FindBlocksAndVariables();
