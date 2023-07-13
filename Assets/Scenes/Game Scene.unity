@@ -674,7 +674,7 @@ GameObject:
   - component: {fileID: 719851945}
   m_Layer: 0
   m_Name: Character
-  m_TagString: Untagged
+  m_TagString: CharacterImage
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1212,7 +1212,7 @@ GameObject:
   - component: {fileID: 1943149193}
   m_Layer: 0
   m_Name: Background
-  m_TagString: Untagged
+  m_TagString: BackgroundImage
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

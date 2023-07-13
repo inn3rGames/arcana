@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - DialogueText
+  - CharacterImage
+  - BackgroundImage
   layers:
   - Default
   - TransparentFX

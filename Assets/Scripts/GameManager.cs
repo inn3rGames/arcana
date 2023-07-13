@@ -6,10 +6,41 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
+    private Image _backgroundImage;
+    private Image _characterImage;
+
+    private Dictionary<string, Sprite> _spriteDictionary = new Dictionary<string, Sprite>();
+
+    private Sprite _forest;
+    private Sprite _player;
+    private Sprite _asra;
+    private Sprite _snowman;
+
     private TMP_Text dialogueText;
     private int _blockIndex;
     private int _commandIndex;
     private List<ProcessedBlock> _processedBlocks;
+
+    void Awake()
+    {
+        _backgroundImage = GameObject
+            .FindGameObjectWithTag("BackgroundImage")
+            .GetComponent<Image>();
+        _characterImage = GameObject.FindGameObjectWithTag("CharacterImage").GetComponent<Image>();
+
+        // Load sprites
+        _forest = Resources.Load<Sprite>("Art/Forest");
+        _spriteDictionary.Add("Forest", _forest);
+
+        _player = Resources.Load<Sprite>("Art/Player");
+        _spriteDictionary.Add("Player", _player);
+
+        _asra = Resources.Load<Sprite>("Art/Asra");
+        _spriteDictionary.Add("Asra", _asra);
+
+        _snowman = Resources.Load<Sprite>("Art/Snowman");
+        _spriteDictionary.Add("Snowman", _snowman);
+    }
 
     void Start()
     {
@@ -22,12 +53,15 @@ public class GameManager : MonoBehaviour
 
         _processedBlocks = DialogueParser.ProcessedBlocks;
 
+        // Initialize scene
+        ExecuteCommands();
         SetText();
     }
 
     public void Click()
     {
         Next();
+        ExecuteCommands();
         SetText();
     }
 
@@ -61,11 +95,22 @@ public class GameManager : MonoBehaviour
     {
         Command curentCommand = _processedBlocks[_blockIndex].Commands[_commandIndex];
 
-        if (curentCommand.Type.Equals("show")) { }
+        if (curentCommand.Type.Equals("show"))
+        {
+            _characterImage.enabled = true;
+            _characterImage.sprite = _spriteDictionary[curentCommand.Content];
+        }
 
-        if (curentCommand.Type.Equals("hide")) { }
+        if (curentCommand.Type.Equals("hide"))
+        {
+            _characterImage.enabled = false;
+        }
 
-        if (curentCommand.Type.Equals("showBG")) { }
+        if (curentCommand.Type.Equals("showBG"))
+        {
+            _backgroundImage.enabled = true;
+            _backgroundImage.sprite = _spriteDictionary[curentCommand.Content];
+        }
 
         if (curentCommand.Type.Equals("call")) { }
 
