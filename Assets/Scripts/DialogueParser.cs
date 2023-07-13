@@ -120,8 +120,6 @@ public class DialogueParser : MonoBehaviour
             }
         }
 
-        LogProcessedCommands(processedCommands);
-
         return processedCommands;
     }
 
@@ -206,7 +204,7 @@ public class DialogueParser : MonoBehaviour
         for (var i = 0; i < processedCommands.Count; i++)
         {
             Debug.Log(
-                $"COMMAND START {processedCommands[i].Type} {processedCommands[i].Character} {processedCommands[i].Content} {processedCommands[i].ChoiceBlock} COMMAND END"
+                $"|||{processedCommands[i].Type} {processedCommands[i].Character} {processedCommands[i].Content} {processedCommands[i].ChoiceBlock}|||"
             );
         }
     }
@@ -217,9 +215,12 @@ public class DialogueParser : MonoBehaviour
         for (var i = 0; i < processedBlock.Count; i++)
         {
             Debug.Log(
-                $"BLOCK START {processedBlock[i].Index} {processedBlock[i].Name} {processedBlock[i].Commands.Count} BLOCK END"
+                $"~~~BLOCK START {processedBlock[i].Index} {processedBlock[i].Name} {processedBlock[i].Commands.Count}~~~"
             );
             LogProcessedCommands(processedBlock[i].Commands);
+            Debug.Log(
+                $"~~~BLOCK END {processedBlock[i].Index} {processedBlock[i].Name} {processedBlock[i].Commands.Count}~~~"
+            );
         }
     }
 }
