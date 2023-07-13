@@ -56,6 +56,10 @@ public class GameManager : MonoBehaviour
             .FindGameObjectWithTag("CharacterNameText")
             .GetComponent<TextMeshProUGUI>();
 
+        // Hide character image
+        _characterImage.color = new Color32(0, 0, 0, 0);
+        _characterImage.enabled = false;
+
         _blockIndex = 0;
         _commandIndex = 0;
 
@@ -96,7 +100,7 @@ public class GameManager : MonoBehaviour
     void LogText()
     {
         string currentContent = _processedBlocks[_blockIndex].Commands[_commandIndex].Content;
-        Debug.Log(currentContent + "" + _blockIndex.ToString() + "" + _commandIndex.ToString());
+        Debug.Log(currentContent + " " + _blockIndex.ToString() + " " + _commandIndex.ToString());
     }
 
     void ExecuteCommands()
@@ -108,12 +112,14 @@ public class GameManager : MonoBehaviour
 
         if (curentCommand.Type.Equals("show"))
         {
+            _characterImage.color = new Color32(255, 255, 255, 255);
             _characterImage.enabled = true;
             _characterImage.sprite = _spriteDictionary[curentCommand.Content];
         }
 
         if (curentCommand.Type.Equals("hide"))
         {
+            _characterImage.color = new Color32(0, 0, 0, 0);
             _characterImage.enabled = false;
         }
 
