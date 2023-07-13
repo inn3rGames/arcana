@@ -7,7 +7,7 @@ public class DialogueParser : MonoBehaviour
 {
     public TextAsset DialogueFile;
     private Dictionary<string, string> _variables = new Dictionary<string, string>();
-    private List<string[]> _blocks = new List<string[]>();
+    private List<string[]> _rawBlocks = new List<string[]>();
     public List<ProcessedBlock> ProcessedBlocks = new List<ProcessedBlock>();
 
     void Start()
@@ -25,7 +25,7 @@ public class DialogueParser : MonoBehaviour
         string[] contentLines = content.Split(System.Environment.NewLine.ToCharArray());
 
         bool foundBlock = false;
-        Queue<string> currentBlockContent = new Queue<string>();
+        List<string> rawBlock = new List<string>();
 
         for (int i = 0; i < contentLines.Length; i++)
         {
@@ -39,7 +39,7 @@ public class DialogueParser : MonoBehaviour
                 _variables.Add(key, value);
             }
 
-            // Process the founded block
+            // Process the founded raw block
             if (foundBlock == true)
             {
                 // Look for a new block if the founded block no longer has commands
@@ -48,46 +48,53 @@ public class DialogueParser : MonoBehaviour
                     foundBlock = false;
 
                     // Use an array to deep copy our content
-                    _blocks.Add(currentBlockContent.ToArray());
-                    currentBlockContent.Clear();
+                    _rawBlocks.Add(rawBlock.ToArray());
+                    rawBlock.Clear();
                 }
                 // Add commands to the founded block
                 else
                 {
-                    currentBlockContent.Enqueue(contentLine);
+                    rawBlock.Add(contentLine);
                 }
             }
 
-            // Find a block
+            // Find a raw block
             if (contentLine.StartsWith("block"))
             {
                 foundBlock = true;
 
-                // Add block index from text line
+                // Add block start from text line
                 string id = (i + 1).ToString();
-                currentBlockContent.Enqueue(id);
+                rawBlock.Add(id);
 
                 // Add block title
-                string title = contentLine;
-                currentBlockContent.Enqueue(title);
+                string title = contentLine.Remove(contentLine.IndexOf("block "), ("block ").Length);
+                rawBlock.Add(title);
             }
         }
     }
 
     private void ProcessBlocks()
     {
-        for (int i = 0; i < _blocks.Count; i++)
+        for (int i = 0; i < _rawBlocks.Count; i++)
         {
-            List<Command> processedCommands = ExtractCommandsFromContent(_blocks[i]);
-            ProcessedBlocks.Add(new ProcessedBlock(i, "demo", processedCommands));
+            List<Command> processedCommands = ExtractCommandsFromRawBlock(_rawBlocks[i]);
+            ProcessedBlocks.Add(
+                new ProcessedBlock(
+                    i,
+                    Int32.Parse(_rawBlocks[i][0]),
+                    _rawBlocks[i][1],
+                    processedCommands
+                )
+            );
         }
     }
 
-    private List<Command> ExtractCommandsFromContent(string[] block)
+    private List<Command> ExtractCommandsFromRawBlock(string[] rawBlock)
     {
         List<Command> processedCommands = new List<Command>();
 
-        foreach (string contentLine in block)
+        foreach (string contentLine in rawBlock)
         {
             if (contentLine.Contains("show "))
             {
@@ -215,11 +222,11 @@ public class DialogueParser : MonoBehaviour
         for (var i = 0; i < processedBlock.Count; i++)
         {
             Debug.Log(
-                $"~~~BLOCK START {processedBlock[i].Index} {processedBlock[i].Name} {processedBlock[i].Commands.Count}~~~"
+                $"~~~BLOCK START index={processedBlock[i].Index}; textLineStart={processedBlock[i].TextLineStart}; name={processedBlock[i].Name}; totalCommands={processedBlock[i].Commands.Count};~~~"
             );
             LogProcessedCommands(processedBlock[i].Commands);
             Debug.Log(
-                $"~~~BLOCK END {processedBlock[i].Index} {processedBlock[i].Name} {processedBlock[i].Commands.Count}~~~"
+                $"~~~BLOCK END index={processedBlock[i].Index}; textLineStart={processedBlock[i].TextLineStart}; name={processedBlock[i].Name}; totalCommands={processedBlock[i].Commands.Count};~~~"
             );
         }
     }
