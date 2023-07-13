@@ -7,7 +7,7 @@ public class DialogueParser : MonoBehaviour
     public TextAsset DialogueFile;
     private Dictionary<string, string> _variables = new Dictionary<string, string>();
     private List<string[]> _rawBlocks = new List<string[]>();
-    public List<ProcessedBlock> ProcessedBlocks = new List<ProcessedBlock>();
+    public static List<ProcessedBlock> ProcessedBlocks = new List<ProcessedBlock>();
 
     void Awake()
     {
