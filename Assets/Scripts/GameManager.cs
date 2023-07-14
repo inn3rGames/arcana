@@ -203,7 +203,6 @@ public class GameManager : MonoBehaviour
         if (curentCommand.Type.Equals("dialogue"))
         {
             curentCommand.Content = ReplaceVariable(curentCommand.Content);
-            //_dialogueText.text = curentCommand.Content;
             StartCoroutine(TypeWriterEffect(curentCommand.Content, _dialogueText));
             _characterNameText.text = curentCommand.Character;
         }

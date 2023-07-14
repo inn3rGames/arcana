@@ -23,6 +23,8 @@ public class DialogueParser : MonoBehaviour
         FindBlocksAndVariables();
         ProcessBlocks();
         GenerateBlockLinks();
+
+        //Useful for debugging
         //LogBlockLinks(BlockLinks);
         //LogProcessedBlocks(ProcessedBlocks);
     }

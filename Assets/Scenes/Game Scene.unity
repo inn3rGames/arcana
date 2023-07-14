@@ -1393,6 +1393,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ChoiceButtonPrefab: {fileID: 4769226596911122696, guid: 48b3817f2993c43529f5fdc7b899561f,
     type: 3}
+  _typeWriterDelay: 0.05
 --- !u!114 &1929029827
 MonoBehaviour:
   m_ObjectHideFlags: 0
