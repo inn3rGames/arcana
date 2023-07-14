@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
 
     private int _blockIndex;
     private int _commandIndex;
+    private bool _disableClick = false;
     private Dictionary<string, string> _variables;
     private List<ProcessedBlock> _processedBlocks;
     private Dictionary<string, ProcessedBlock> _blockLinks;
@@ -69,18 +70,17 @@ public class GameManager : MonoBehaviour
         _processedBlocks = DialogueParser.ProcessedBlocks;
         _blockLinks = DialogueParser.BlockLinks;
 
-        Instantiate(ChoiceButtonPrefab, _choiceArea.transform);
-
         // Initialize scene
-        LogText();
         ExecuteCommands();
     }
 
     public void Click()
     {
-        Next();
-        LogText();
-        ExecuteCommands();
+        if (_disableClick == false)
+        {
+            Next();
+            ExecuteCommands();
+        }
     }
 
     void Next()
@@ -110,6 +110,8 @@ public class GameManager : MonoBehaviour
 
     void ExecuteCommands()
     {
+        LogText();
+
         Command curentCommand = _processedBlocks[_blockIndex].Commands[_commandIndex];
 
         _dialogueText.text = "";
@@ -149,6 +151,26 @@ public class GameManager : MonoBehaviour
         if (curentCommand.Type.Equals("choice"))
         {
             _choiceGroup.SetActive(true);
+
+            while (_commandIndex <= _processedBlocks[_blockIndex].Commands.Count - 1)
+            {
+                GameObject choiceContainer = Instantiate(ChoiceButtonPrefab, _choiceArea.transform);
+                Button choiceButton = choiceContainer.GetComponentInChildren<Button>();
+                TMP_Text choiceText = choiceButton.GetComponentInChildren<TMP_Text>();
+
+                choiceText.text = _processedBlocks[_blockIndex].Commands[_commandIndex].Content;
+
+                int currentBlockIndex = _blockIndex;
+                int currentCommandIndex = _commandIndex;
+
+                choiceButton.onClick.AddListener(
+                    () => HandleChoiceClick(currentBlockIndex, currentCommandIndex)
+                );
+
+                _commandIndex += 1;
+            }
+
+            _disableClick = true;
         }
 
         if (curentCommand.Type.Equals("dialogue"))
@@ -156,6 +178,19 @@ public class GameManager : MonoBehaviour
             _dialogueText.text = ReplaceVariable(curentCommand.Content);
             _characterNameText.text = curentCommand.Character;
         }
+    }
+
+    private void HandleChoiceClick(int blockIndex, int commandIndex)
+    {
+        string blockKey = _processedBlocks[blockIndex].Commands[commandIndex].ChoiceBlock;
+        ProcessedBlock destinationBlock = _blockLinks[blockKey];
+
+        _blockIndex = destinationBlock.Index;
+        _commandIndex = 0;
+
+        _disableClick = false;
+
+        ExecuteCommands();
     }
 
     private string ReplaceVariable(string contentLine)
