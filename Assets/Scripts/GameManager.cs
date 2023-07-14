@@ -27,6 +27,11 @@ public class GameManager : MonoBehaviour
     private List<ProcessedBlock> _processedBlocks;
     private Dictionary<string, ProcessedBlock> _blockLinks;
 
+    [SerializeField]
+    [Range(0.01F, 0.5F)]
+    private float _typeWriterDelay = 0.05F;
+    private bool _typeWriterActive = false;
+
     void Awake()
     {
         _backgroundImage = GameObject
@@ -76,10 +81,22 @@ public class GameManager : MonoBehaviour
 
     public void Click()
     {
-        if (_disableClick == false)
+        if (_typeWriterActive == true)
         {
-            Next();
-            ExecuteCommands();
+            _typeWriterActive = false;
+            StopAllCoroutines();
+
+            Command curentCommand = _processedBlocks[_blockIndex].Commands[_commandIndex];
+            curentCommand.Content = ReplaceVariable(curentCommand.Content);
+            _dialogueText.text = curentCommand.Content;
+        }
+        else
+        {
+            if (_disableClick == false)
+            {
+                Next();
+                ExecuteCommands();
+            }
         }
     }
 
@@ -185,8 +202,21 @@ public class GameManager : MonoBehaviour
 
         if (curentCommand.Type.Equals("dialogue"))
         {
-            _dialogueText.text = ReplaceVariable(curentCommand.Content);
+            curentCommand.Content = ReplaceVariable(curentCommand.Content);
+            //_dialogueText.text = curentCommand.Content;
+            StartCoroutine(TypeWriterEffect(curentCommand.Content, _dialogueText));
             _characterNameText.text = curentCommand.Character;
+        }
+    }
+
+    IEnumerator TypeWriterEffect(string content, TMP_Text parent)
+    {
+        _typeWriterActive = true;
+
+        foreach (char letter in content)
+        {
+            parent.text += letter;
+            yield return new WaitForSeconds(_typeWriterDelay);
         }
     }
 
