@@ -92,6 +92,9 @@ public class GameManager : MonoBehaviour
             _commandIndex = 0;
             _blockIndex += 1;
 
+            //Prevent infinite navigation. Disable for endless play/testing.
+            StoryNavigator.EndStory();
+
             if (_blockIndex > _processedBlocks.Count - 1)
             {
                 _blockIndex = 0;
