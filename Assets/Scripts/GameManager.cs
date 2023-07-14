@@ -152,6 +152,13 @@ public class GameManager : MonoBehaviour
         {
             _choiceGroup.SetActive(true);
 
+            // Clean old choice buttons
+            foreach (Transform child in _choiceArea.transform)
+            {
+                Destroy(child.gameObject);
+            }
+
+            // Create new choice buttons
             while (_commandIndex <= _processedBlocks[_blockIndex].Commands.Count - 1)
             {
                 GameObject choiceContainer = Instantiate(ChoiceButtonPrefab, _choiceArea.transform);

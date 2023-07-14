@@ -19,7 +19,7 @@ public class DialogueParser : MonoBehaviour
         BlockLinks = new Dictionary<string, ProcessedBlock>();
 
         // Load and process script
-        _dialogueFile = Resources.Load<TextAsset>("Data/script");
+        _dialogueFile = Resources.Load<TextAsset>("Data/script2");
         FindBlocksAndVariables();
         ProcessBlocks();
         GenerateBlockLinks();
